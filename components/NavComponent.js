@@ -3,13 +3,16 @@ import Context from '../context/Context'
 import { Pages } from '../context/Pages'
 import ToastComponent from './ToastComponent'
 import UserLinkComponent from './UserLinkComponent'
-
+import exitIcon from './icons/exit.png';
+import coinIcon from './icons/coin.png';
+import logoIcon from './icons/logo.png';
 /**
  * The navigation component.
  * @param {*} props 
  * @returns HTML for the navigation bar.
  */
 export default function NavComponent(props) {
+
     // Context: user, opened module, page, toast
     const { user, setUser, setOpenedModule, page, setPage, toast, setToast } = useContext(Context)
 
@@ -67,7 +70,7 @@ export default function NavComponent(props) {
      * Handles the editor board being opened.
      * @param {*} e 
      */
-     const handleEditorClick = (e) => {
+    const handleEditorClick = (e) => {
         e.preventDefault()
         setOpenedModule(null)
         setPage(Pages.EDITOR)
@@ -104,47 +107,53 @@ export default function NavComponent(props) {
     }, [toast])
 
     if (user) {
-        navBarContents = (
-            <div className="collapse navbar-collapse" id="navbarText">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item">
-                        <a className={"nav-link" + checkIfActive(Pages.MODULES)} href="#" onClick={handleModulesClick}>Modules</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className={"nav-link" + checkIfActive(Pages.DISCUSSION)} href="#" onClick={handleDiscussionClick}>Discussion</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">Competition</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleProfileClick}>My Profile</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleLeaderboardClick}>Leaderboard</a>
-                    </li>
-                </ul>
+
+        {/*                 
                 <span className="navbar-text">
-                    Signed in as <UserLinkComponent uuid={user.uuid} name={user.name} showOwnName={true}/>. (<a href="#" onClick={handleSignOut}>Sign out</a>)
+                    Signed in as <UserLinkComponent uuid={user.uuid} name={user.name} showOwnName={true} />. (<a href="#" onClick={handleSignOut}>Sign out</a>)
                 </span>
-                {getToast()}
-            </div>
+                {getToast()} */}
+        navBarContents = (
+            <ul className="layout-nav-main-list">
+                <li className="layout-nav-main-item">
+                    <a className={"nav-link" + checkIfActive(Pages.MODULES)} href="#" onClick={handleModulesClick}>Modules</a>
+                </li>
+                <li className="layout-nav-main-item">
+                    <a className={"nav-link" + checkIfActive(Pages.DISCUSSION)} href="#" onClick={handleDiscussionClick}>Discussion</a>
+                </li>
+                <li className="layout-nav-main-item">
+                    <a className="nav-link" href="#">Competition</a>
+                </li>
+                <li className="layout-nav-main-item">
+                    <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleProfileClick}>My Profile</a>
+                </li>
+                <li className="layout-nav-main-item">
+                    <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleLeaderboardClick}>Leaderboard</a>
+                </li>
+            </ul>
         )
     }
 
     return (
-        <div className="container">
-            <nav className="navbar fixed-top navbar-expand-lg navbar-light nav_blue_background p-3">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Intro. to Python</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                    </button>
-                    {navBarContents}
+        <div className="layout-top-nav global-card-base">
+            <div className='layout-top-nav-main'>
+                <div className="layout-top-nav-title">
+                    <img src={logoIcon.src} style={{ width: '28px' }} />
+                    <a href="#">Intro. to Python</a>
                 </div>
-            </nav>
-            <br />
-            <br />
-            <br />
+                {navBarContents}
+            </div>
+            <div className='layout-top-nav-right'>
+                {user?.uuid ? <div className='layout-top-nav-icon-group'>
+                <span>{user?.score}</span>
+                    <img src={coinIcon.src} style={{ width: '16px' }} />
+                </div> : null}
+                <div className='layout-top-nav-icon-group' onClick={handleSignOut}>
+                    <span>{user?.name}</span>
+                    <img src={exitIcon.src} style={{ width: '20px' }} />
+                    <span>Sign out</span>
+                </div>
+            </div>
         </div>
     );
 }

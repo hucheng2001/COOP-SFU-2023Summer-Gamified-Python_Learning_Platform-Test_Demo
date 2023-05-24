@@ -4,7 +4,7 @@ import List from "./List";
 
 export default function LeaderboardPageComponent() {
 
-    const [ data, setData ] = useState([])
+    const [data, setData] = useState([{}])
     //     [{
     //         name : "default1",
     //         score : 4444
@@ -23,25 +23,23 @@ export default function LeaderboardPageComponent() {
     }, [])
 
     const labels = [{
-        rank : "Rank",
-        name : "Name", 
-        score : "Score",
-        mcqsolved : "MCQ's Solved",
-        challsolved : "Challenge Questions Solved",
-        badges : "Badges"
+        rank: "Rank",
+        name: "Name",
+        score: "Score",
+        mcqsolved: "MCQ's Solved",
+        challsolved: "Challenge Questions Solved",
+        badges: "Badges"
     }]
 
     return (
-        <div>
-            <div className='header-block'>
-                <h2>Leaderboard</h2>
+        <div className='global-card-base layout-card' style={{ margin: '28px 38px' }}>
+            <div className='layout-card-header'>
+                <h2 className='layout-card-title'>Leaderboard</h2>
             </div>
-            <div className="leaderboard-block">
-                <div className="flex-grow-1">
-                    <div className="row mb-3">
-                        <List data={labels} isHeader={true}/>
-                        <List data={data} isHeader={false}/>
-                    </div>
+            <div className="layout-card-main">
+                <div className='layout-list-main'>
+                    <List data={labels} isHeader={true} />
+                    <List data={data} isHeader={false} />
                 </div>
             </div>
         </div>
