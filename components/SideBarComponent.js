@@ -20,13 +20,13 @@ export default function SideBar(props) {
     const moduleName = props.moduleName
 
 
-    const questionTopicsList = challengeQuestion.find(x => x.id === moduleName).questions.sort((a, b) => b.difficulty.localeCompare(a.difficulty)).map((question, i) => (
+    const questionTopicsList = challengeQuestion.find(x => x.id === moduleName)?.questions.sort((a, b) => b.difficulty.localeCompare(a.difficulty)).map((question, i) => (
         <NavItem eventKey={question.id}>
             <NavText>
                 <div className='mysidenav-item'>
                     <span>{question.title}</span>
                     <span>{question.difficulty}</span>
-                    { challengeAnswer[moduleName].question_data.find(x => x.id === question.id).completed ? <span>✅</span> : <span>❌</span>}
+                    { challengeAnswer?.[moduleName]?.question_data.find(x => x.id === question.id).completed ? <span>✅</span> : <span>❌</span>}
                 </div>
             </NavText>
         </NavItem> 
@@ -44,7 +44,11 @@ export default function SideBar(props) {
                     setChallengeNumber(parseInt(selected))
                 }
             }}
-            className="mysidenav"
+            onToggle={(v)=>{
+                console.log('vvv', v);
+                props.onToggle?.(v);
+            }}
+            className="mysidenav global-card-base"
         >
             <SideNav.Toggle />
             <SideNav.Nav defaultSelected = "home">
@@ -55,7 +59,7 @@ export default function SideBar(props) {
                 <NavItem eventKey="comp">
                     <NavIcon><FontAwesomeIcon icon="fa-solid fa-brain" /></NavIcon>
                     <NavText>Challenge</NavText>
-                    {challengeQuestion.find(x => x.id === moduleName) && questionTopicsList}
+                    {challengeQuestion?.find(x => x.id === moduleName) && questionTopicsList}
                     {/* {challengeQuestion[moduleName] ? questionTopicsList: null} */}
                 </NavItem>
             </SideNav.Nav>

@@ -1,4 +1,4 @@
-import BadgesComponent from "./BadgesComponent";
+// import BadgesComponent from "../components/BadgesComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -24,9 +24,10 @@ import badge1Icon from './icons/badge-1.png';
 import badge2Icon from './icons/badge-2.png';
 import badge3Icon from './icons/badge-3.png';
 
+import dynamic from 'next/dynamic'
 
-
-// import { getQuestionsList } from "../data/ChallengeQuestions"
+// import CanvasTodo from './CanvasTodo';
+const CanvasTodo = dynamic(import('./CanvasTodo'), { ssr: false });
 
 export default function HomePageComponent() {
     library.add(fab, fas, far)
@@ -193,18 +194,63 @@ export default function HomePageComponent() {
             </Modal>
         );
     }
-
+    console.log('CanvasTodo', CanvasTodo);
     if (openedModule) {
+
+
         return (
-            <div className="d-flex flex-row justify-content-between">
+            <div className="d-flex flex-row justify-content-between" style={{ padding: '0 38px', gap: '24px' }}>
                 <OpenModuleComponent title={openedModule} />
                 {getEditor()}
-                <div className="px-5 mt-5">
-                    <BadgesComponent></BadgesComponent>
+                <div className="">
+                    <div className="layout-card global-card-base">
+                        <div className="layout-card-header">
+                            <div className="layout-card-title">
+                                Badges
+                            </div>
+                        </div>
+
+                        <div className="layout-card-main">
+
+                            <div className="badges-card-list">
+                                <div className="badges-card-item">
+                                    <div className="badges-card-icon">
+                                        <img src={badge1Icon.src} />
+                                    </div>
+                                    <div className="badges-card-main">
+                                        <div className="badges-card-title">Example Badge 1</div>
+                                        <div className="badges-card-date">2023-03-22</div>
+                                    </div>
+                                </div>
+                                <div className="badges-card-item">
+                                    <div className="badges-card-icon">
+                                        <img src={badge2Icon.src} />
+                                    </div>
+                                    <div className="badges-card-main">
+                                        <div className="badges-card-title">Example Badge 2</div>
+                                        <div className="badges-card-date">2023-03-22</div>
+                                    </div>
+                                </div>
+                                <div className="badges-card-item">
+                                    <div className="badges-card-icon">
+                                        <img src={badge3Icon.src} />
+                                    </div>
+                                    <div className="badges-card-main">
+                                        <div className="badges-card-title">Example Badge 3</div>
+                                        <div className="badges-card-date">2023-03-22</div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         )
     } else {
+
+    
         return (
             <div className="home_page">
                 <div className="layout-card global-card-base">
@@ -212,7 +258,7 @@ export default function HomePageComponent() {
                         <div className="layout-card-title">
                             Topics
                         </div>
-                        <div className="layout-card-right"
+                        <div className="layout-card-right" style={{ cursor: 'pointer' }}
                             onClick={() => setModalHowToShow(true)} >
                             <img src={helpIcon.src} width="14px" />
                             <span>How to Play</span>
@@ -227,7 +273,7 @@ export default function HomePageComponent() {
                     <div className="layout-card-main">
                         {/* topics-card */}
                         <div className="topics-card-list">
-                            <div className="global-card-base topics-card" module="conditional-statements" onClick={handleModuleStart}>
+                            <div className="global-card-base topics-card" module="conditional-statements" style={{ cursor: 'pointer' }}  onClick={handleModuleStart}>
                                 <div className="topics-card-header">
                                     <img src={topic1Icon.src} />
                                     <div className="topics-info">
@@ -241,7 +287,7 @@ export default function HomePageComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="global-card-base topics-card" module="conditional-statements" onClick={handleModuleStart}>
+                            <div className="global-card-base topics-card" module="conditional-statements" style={{ cursor: 'pointer' }}  onClick={handleModuleStart}>
                                 <div className="topics-card-header">
                                     <img src={topic2Icon.src} />
                                     <div className="topics-info">
@@ -255,7 +301,7 @@ export default function HomePageComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="global-card-base topics-card" module="conditional-statements" onClick={handleModuleStart}>
+                            <div className="global-card-base topics-card" module="conditional-statements" style={{ cursor: 'pointer' }}  onClick={handleModuleStart}>
                                 <div className="topics-card-header">
                                     <img src={topic3Icon.src} />
                                     <div className="topics-info">
@@ -269,7 +315,7 @@ export default function HomePageComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="global-card-base topics-card" module="conditional-statements" onClick={handleModuleStart}>
+                            <div className="global-card-base topics-card" module="conditional-statements" style={{ cursor: 'pointer' }}  onClick={handleModuleStart}>
                                 <div className="topics-card-header">
                                     <img src={topic4Icon.src} />
                                     <div className="topics-info">
@@ -294,8 +340,9 @@ export default function HomePageComponent() {
                                 Statistics
                             </div>
                         </div>
-                        <div className="layout-card-main">
-                            {/* todo */} todo
+                        <div className="layout-card-main" suppressHydrationWarning={true}>
+                            {/* todo */}
+                            <CanvasTodo />
                         </div>
                     </div>
                     <div className="layout-card global-card-base">
@@ -437,7 +484,7 @@ export default function HomePageComponent() {
                         </div>
 
                         <div className="ps-5 mt-5">
-                            <BadgesComponent></BadgesComponent>
+                            {/* <BadgesComponent></BadgesComponent> */}
                         </div>
                     </div>
                 </div>

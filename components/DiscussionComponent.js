@@ -12,10 +12,10 @@ import UserLinkComponent from "./UserLinkComponent"
  */
 export default function DiscussionComponent(props) {
     // Context used: user, toast
-    const { user, setToast} = useContext(Context)
+    const { user, setToast } = useContext(Context)
 
     // State representing the list of discussions
-    const [discussions, setDiscussions] = useState([])
+    const [discussions, setDiscussions] = useState([{}])
 
     // State representing the open discussion, if there is one
     const [currentDiscussion, setCurrentDiscussion] = useState(null)
@@ -28,7 +28,7 @@ export default function DiscussionComponent(props) {
      */
     const loadDiscussions = () => {
         getDiscussionList().then(d => {
-            setDiscussions(d)
+            setDiscussions([{}])
         }).catch(e => {
             console.log(e)
         })
@@ -133,13 +133,13 @@ export default function DiscussionComponent(props) {
         return (
             <div className="container mx-auto">
                 <h3>{currentDiscussion.discussion.title}</h3>
-                <p>Posted by <UserLinkComponent uuid={currentDiscussion.author.uuid} name={currentDiscussion.author.name} /> on {currentDiscussion.discussion.date.toString()}. <a href="#" onClick={() => openDiscussion(null)}>Return to discussions.</a></p>
+                <p>Posted by <UserLinkComponent uuid={currentDiscussion?.author?.uuid} name={currentDiscussion.author?.name} /> on {currentDiscussion.discussion.date.toString()}. <a href="#" onClick={() => openDiscussion(null)}>Return to discussions.</a></p>
                 <hr />
                 <div className="container">
                     <div className="card discussion-original-post">
                         <div className="card-body">
                             <p className="card-text">
-                                <span><UserLinkComponent uuid={currentDiscussion.author.uuid} name={currentDiscussion.author.name} /></span>
+                                <span><UserLinkComponent uuid={currentDiscussion?.author?.uuid} name={currentDiscussion.author?.name} /></span>
                                 <br />
                                 {currentDiscussion.discussion.content}
                             </p>
@@ -151,7 +151,7 @@ export default function DiscussionComponent(props) {
                                 <div className="card discussion-reply" key={index}>
                                     <div className="card-body">
                                         <p className="card-text">
-                                            <span><UserLinkComponent uuid={r.author.uuid} name={r.author.name} /> &middot; {r.date.toString()}</span>
+                                            <span><UserLinkComponent uuid={r.author?.uuid} name={r.author?.name} /> &middot; {r.date.toString()}</span>
                                             <br />
                                             {r.content}
                                         </p>
@@ -186,26 +186,31 @@ export default function DiscussionComponent(props) {
 
         if (posting) {
             form = (
-                <div className="container mx-auto">
-                    <h3>Discussion</h3>
-                    <hr />
-                    <div className="container col-md-4 col-md-offset-4">
-                        <form onSubmit={postFormik.handleSubmit}>
-                            <div className="form-group">
-                                <input type="text" className="form-control" id="title" name="title" placeholder="Title" value={postFormik.values.title} onChange={postFormik.handleChange} />
-                                <div className="text-danger">{postFormik.errors.title}</div>
-                            </div>
-                            <br />
-                            <div className="form-group">
-                                <textarea className="form-control" id="content" name="content" placeholder="Content" value={postFormik.values.content} onChange={postFormik.handleChange} />
-                                <div className="text-danger">{postFormik.errors.content}</div>
-                            </div>
-                            <br />
-                            <div className="button-group" role="group">
-                                <button type="submit" className="btn btn-primary">Post</button>
-                                <button type="button" className="btn btn-secondary" onClick={togglePostForm}>Cancel</button>
-                            </div>
-                        </form>
+                <div className="global-card-base home_page layout-card">
+                    <div className="layout-card-header">
+                        <div className="layout-card-title">
+                            Discussion
+                        </div>
+                    </div>
+                    <div className="layout-card-main">
+                        <div className="container col-md-4 col-md-offset-4">
+                            <form onSubmit={postFormik.handleSubmit}>
+                                <div className="form-group">
+                                    <input type="text" className="form-control" id="title" name="title" placeholder="Title" value={postFormik.values.title} onChange={postFormik.handleChange} />
+                                    <div className="text-danger">{postFormik.errors.title}</div>
+                                </div>
+                                <br />
+                                <div className="form-group">
+                                    <textarea className="form-control" id="content" name="content" placeholder="Content" value={postFormik.values.content} onChange={postFormik.handleChange} />
+                                    <div className="text-danger">{postFormik.errors.content}</div>
+                                </div>
+                                <br />
+                                <div className="button-group" role="group">
+                                    <button type="submit" className="btn btn-primary">Post</button>
+                                    <button type="button" className="btn btn-secondary" onClick={togglePostForm}>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             )
@@ -215,36 +220,43 @@ export default function DiscussionComponent(props) {
 
         // Render the opened discussion
         return (
-            <div className="container mx-auto">
-                <h3>Discussion</h3>
-                <hr />
-                <div className="container">
-                    <div className="input-group mb-3">
-                        <input type="text" className="form-control" placeholder="Type to search..." aria-describedby="button-search"></input>
+            <div className="global-card-base home_page layout-card">
+                <div className="layout-card-header">
+                    <div className="layout-card-title">
+                        Discussion
                     </div>
-                    <br />
-                    <div>
-                        {
-                            discussions.map((d, index) => {
-                                return (
-                                    <div className="card mb-4" key={index}>
-                                        <div className="card-body">
-                                            <div className="row">
-                                                <div className="col">
-                                                    <a href="#" onClick={e => openDiscussion(d.uuid)}>{d.title}</a>
-                                                </div>
-                                                <div className="col">
-                                                    <span>Posted by <UserLinkComponent uuid={d.author.uuid} name={d.author.name} /></span>
+                </div>
+                <div className="layout-card-main">
+                    <div className="container">
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Type to search..." aria-describedby="button-search"></input>
+                        </div>
+                        <br />
+                        <div>
+                            {
+                                discussions?.map((d, index) => {
+                                    return (
+                                        <div className="" key={index}>
+                                            <div className="global-card-base layout-card">
+                                                <div className="">
+                                                    <div className="row">
+                                                        <div className="col" style={{ padding: '10px' }}>
+                                                            <a href="#" onClick={e => openDiscussion(d.uuid)}>{d.title}</a>
+                                                        </div>
+                                                        <div className="col" style={{ padding: '10px' }}>
+                                                            <span>Posted by <UserLinkComponent uuid={d.author?.uuid} name={d.author?.name} /></span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )
-                            })
-                        }
+                                    )
+                                })
+                            }
+                        </div>
+                        <br />
+                        {form}
                     </div>
-                    <br />
-                    {form}
                 </div>
             </div>
         )

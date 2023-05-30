@@ -35,7 +35,7 @@ export default function Home() {
   const [challengeAnswer, setChallengeAnswer] = useState({})
   const [score, setScore] = useState(200)
 
-  
+
   const contexts = {
     user,
     setUser,
@@ -55,9 +55,9 @@ export default function Home() {
     setChallengeData,
     challengeNumber,
     setChallengeNumber,
-    challengeQuestion, 
+    challengeQuestion,
     setChallengeQuestion,
-    challengeAnswer, 
+    challengeAnswer,
     setChallengeAnswer,
     score,
     setScore
@@ -89,8 +89,10 @@ export default function Home() {
 
     return (
       <Context.Provider value={contexts}>
-        <NavComponent />
-        {currentPage}
+        <div className='layout-page'>
+          <NavComponent />
+          {currentPage}
+        </div>
       </Context.Provider>
     )
   } else {
@@ -106,8 +108,10 @@ export default function Home() {
     } else {
       return (
         <Context.Provider value={contexts}>
-          <NavComponent />
-          <LoginComponent />
+          <div className='layout-page'>
+            <NavComponent />
+            <LoginComponent />
+          </div>
         </Context.Provider>
       )
     }

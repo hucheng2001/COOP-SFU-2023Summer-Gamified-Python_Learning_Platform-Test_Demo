@@ -62,7 +62,7 @@ export async function getQuestionCList() {
     const QuestionC = []
 
     for (const doc of querySnapshot.docs) {
-        QuestionC.push(new questions(doc.id,doc.data().questionFiller, doc.data().questionString, doc.data().questionTitle, doc.data().questionID, doc.data().questionCode,doc.data().questionAnswer,doc.data().questionType,doc.data().questionHint))
+        QuestionC.push(new questions(doc.id,doc.data()?.questionFiller, doc.data()?.questionString, doc.data()?.questionTitle, doc.data()?.questionID, doc.data()?.questionCode,doc.data()?.questionAnswer,doc.data()?.questionType,doc.data()?.questionHint))
     }
 
     return QuestionC

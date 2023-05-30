@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, memo } from 'react'
+import { useEffect, useState, useContext, memo, useRef } from 'react'
 import { Modal } from "react-bootstrap";
 import { giveStudentScore, solvedQuestionCheck, solvedQuestionUpdate, getStudentScore, takeStudentScore, questionHintCheck, questionHintUpdate, getModuleBonus, moduleBonusReceived } from '../data/Students'
 import { getAllModuleQuestions } from '../data/QuizQuestions'
@@ -19,42 +19,42 @@ import SideBar from './SideBarComponent'
 
 function HintModal(props) {
     return (
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Hint - Question {props.title}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{props.body}</p>
-        </Modal.Body>
-      </Modal>
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Hint - Question {props.title}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{props.body}</p>
+            </Modal.Body>
+        </Modal>
     );
-  }
+}
 
 function CompletedModal(props) {
     return (
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            <h2 className="mt-3">🎉 Congratulations! 🎉</h2>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h5>You have completed all questions in the <b>{props.title}</b> module!</h5>
-          <p>You may redo this quiz any time for review.</p>
-        </Modal.Body>
-      </Modal>
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <h2 className="mt-3">🎉 Congratulations! 🎉</h2>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h5>You have completed all questions in the <b>{props.title}</b> module!</h5>
+                <p>You may redo this quiz any time for review.</p>
+            </Modal.Body>
+        </Modal>
     );
 }
 
@@ -87,6 +87,7 @@ function OpenModuleComponent(props) {
 
     // State for incorrect questions
     const [wrongQuestions, setWrongQuestions] = useState(0)
+    const [errorTips, setErrorTips] = useState(false)
 
     // State for number of correct questions in a row
     const [answerStreak, setAnswerStreak] = useState(0)
@@ -103,6 +104,8 @@ function OpenModuleComponent(props) {
     // State for the module bonus award amount
     const [bonusAward, setBonusAward] = useState(0)
 
+    const [sideOpen, setSideOpen] = useState(false)
+
     // State for whether the module bonus award has previously been received
     const [bonusReceived, setBonusReceived] = useState(false)
 
@@ -114,9 +117,11 @@ function OpenModuleComponent(props) {
 
     // State for showing next question button
     const [showNextBtn, setShowNextBtn] = useState(false)
-    
+
     // State for SideBar
     const [sideStr, setSideStr] = useState("quiz")
+
+    const formRef = useRef();
 
     // Load personalization and questions
     useEffect(() => {
@@ -148,13 +153,14 @@ function OpenModuleComponent(props) {
             explanation: '',
         },
         onSubmit: values => {
+            console.log(11);
             const pick = values.picked
             const checked = solvedQuestionCheck(user, moduleName, currentQuestion)
 
             var setDisable = false;
             if (pick === String(questions[currentQuestion].correctAnswerIndex)) {
                 var bonusCoins = answerStreak * 5
-                
+
                 // Standard amount of coins given is 10
                 var coinsAwarded = 10
 
@@ -165,11 +171,11 @@ function OpenModuleComponent(props) {
 
                 coinsAwarded += bonusCoins
 
-                setAnswerStreak(answerStreak+1)
+                setAnswerStreak(answerStreak + 1)
                 setCurrentExplanation("✓ " + questions[currentQuestion].explanation)
                 checked.then(value => {
                     // If question has never been solved before, give coins and update question status
-                    if(!value) {
+                    if (!value) {
                         giveStudentScore(user, coinsAwarded)
                         solvedQuestionUpdate(user, moduleName, currentQuestion, true)
                         setToast({
@@ -203,12 +209,16 @@ function OpenModuleComponent(props) {
                     }
 
                 }
-            } else if (pick !== ''){
-                if (values.options.length > 2) {
+            } else if (pick !== '') {
+                if (values.options?.length > 2) {
                     formik.setSubmitting(false)
                 }
-                setCurrentExplanation("❌ " + questions[currentQuestion].explanation)
-                setWrongQuestions(wrongQuestions + 1)
+                setCurrentExplanation("❌ " + questions[currentQuestion].explanation);
+                setWrongQuestions(wrongQuestions + 1);
+                setErrorTips(true);
+                setTimeout(() => {
+                    setErrorTips(false);
+                }, 300);
 
                 if (wrongQuestions + 1 >= questions.length && showPersonalization === null) {
                     setShowPersonalization(true)
@@ -217,6 +227,7 @@ function OpenModuleComponent(props) {
             formik.setSubmitting(setDisable)
         },
     })
+    const [currentQuestionData, setCurrentQuestionData] = useState(['1', '2'])
 
     /**
      * Fill in form with information of current question as pulled from Firebase
@@ -225,42 +236,42 @@ function OpenModuleComponent(props) {
         if (questions.length > 0 && currentQuestion < questions.length) {
             var formQuestion = document.getElementById("quiz_question");
             var codeBox = document.getElementById("quiz_code");
-            
+
             const quizQuestion = questions[currentQuestion].question.replaceAll('\\n', '\n');
             const quizCode = questions[currentQuestion].code;
             const quizAnswerOptions = questions[currentQuestion].answers;
             formQuestion.innerHTML = `${quizQuestion}`;
 
             setCode(quizCode.replaceAll('\\n', '\n'));
-            
+
             // If there is no code, hide the code box
             if (!quizCode) {
                 codeBox.style.visibility = "hidden";
-            // If there is code, make sure it is displayed
+                // If there is code, make sure it is displayed
             } else {
                 codeBox.style.visibility = "visible";
             }
 
-            for (let i = 0; i < 6; i++) {
-                var currentLabel = document.getElementById(`label-${i}`);
-                if (i < quizAnswerOptions.length) {
-                    currentLabel.innerHTML = ` ${quizAnswerOptions[i]}`
-                } else {
-                    var currentRadio = document.getElementById(`radio-check-${i}`);
-                    currentRadio.style.visibility = "hidden";
-                    currentLabel.innerHTML = ``
-                }
-            }
+            // for (let i = 0; i < 6; i++) {
+            //     var currentLabel = document.getElementById(`label-${i}`);
+            //     if (i < quizAnswerOptions.length) {
+            //         currentLabel.innerHTML = ` ${quizAnswerOptions[i]}`
+            //     } else {
+            //         var currentRadio = document.getElementById(`radio-check-${i}`);
+            //         currentRadio.style.visibility = "hidden";
+            //         currentLabel.innerHTML = ``
+            //     }
+            setCurrentQuestionData(quizAnswerOptions);
 
             setHint(questions[currentQuestion].hint)
-            
+
         }
     }
 
     /**
      * Asynchronously get information about end of module bonus
      */
-    const getModuleBonusInfo= () => {
+    const getModuleBonusInfo = () => {
         getModuleBonus(user, moduleName).then(bonusObj => {
             setBonusAward(bonusObj.award)
 
@@ -278,7 +289,7 @@ function OpenModuleComponent(props) {
     const getQuestions = () => {
         getAllModuleQuestions(moduleName).then(allQuestions => {
             let tempQuestions = []
-            for (let i = 0; i < allQuestions.length; i++) {
+            for (let i = 0; i < allQuestions?.length; i++) {
                 const mcq = allQuestions[i]
                 const question = {
                     id: mcq.qid,
@@ -291,9 +302,9 @@ function OpenModuleComponent(props) {
                 }
                 tempQuestions.push(question)
             }
-    
+
             setQuestions(tempQuestions)
-            
+
         })
     }
 
@@ -304,12 +315,12 @@ function OpenModuleComponent(props) {
      */
     function toTitleCase(str) {
         return str.replace(
-          /\w\S*/g,
-          function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-          }
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
         );
-      }
+    }
 
 
     /**
@@ -326,8 +337,10 @@ function OpenModuleComponent(props) {
         formik.resetForm({})
         for (let i = 0; i < 6; i++) {
             var currentRadio = document.getElementById(`radio-check-${i}`);
+            /*
             currentRadio.checked = false;
             currentRadio.style.visibility = "visible";
+            */
         }
         document.getElementsByClassName("form-check-input").checked = false;
         formik.setFieldValue('picked', '')
@@ -351,6 +364,15 @@ function OpenModuleComponent(props) {
         setElements(divs2)
     }
 
+    const handleSubmitData = (data, i) => {
+        console.log('data', data);
+        formik.setValues({
+            picked: `${i}`,
+        })
+        // formRef.current.submit();
+        formik.handleSubmit();
+    }
+
     /**
      * Opens a coding challenge. Can be easy or hard.
      * @param {Number} editorType 
@@ -361,7 +383,7 @@ function OpenModuleComponent(props) {
 
         if (editorType > 2)
             editorType = 2
-        
+
         setEditorState(editorType)
         setPage(Pages.EDITOR)
 
@@ -397,10 +419,10 @@ function OpenModuleComponent(props) {
     */
     function show_point() {
         currentScore.then((value) => {
-            document.getElementById('p').innerHTML =  'Current Coins: ' + value + ' </p>';
+            document.getElementById('p').innerHTML = 'Current Coins: ' + value + ' </p>';
         });
     }
-   
+
 
     /*
     * Display hint when useer clicks. If they have not bought the hint before, reduce their score accordingly
@@ -418,6 +440,7 @@ function OpenModuleComponent(props) {
     }
 
     const sideOut = (theStr) => {
+        console.log('theStr', theStr)
         if (theStr == "quiz") {
             openQuiz()
         } else {
@@ -425,74 +448,74 @@ function OpenModuleComponent(props) {
         }
     }
 
+
     return (
-        <div className="d-flex flex-row flex-grow-1 ms-5">
-            <SideBar sideOut={sideOut} moduleName={moduleName.replaceAll('-', '_')}/>
-            <div className="bg-primary text-dark bg-opacity-25 rounded ps-2 pt-4 me-5 mb-4">
+        <div className="d-flex flex-row flex-grow-1" style={{ marginLeft: sideOpen ? '260px' : '90px', transition: 'all .2s' }}>
+            <SideBar sideOut={sideOut} onToggle={(v) => setSideOpen(v)} moduleName={moduleName.replaceAll('-', '_')} />
+            {/* <div className="bg-primary text-dark bg-opacity-25 rounded ps-2 pt-4 me-5 mb-4">
                 <div id = "quiz_list" class = "quiz_list3">
-                </div> 
-            </div>
-            <div className="row flex-grow-1" id="quiz_box">  
-                <div className = "quiz_box">
-                    <br></br>
-                    <div className = "quiz_inner_box">
-                        <h1>{getPageTitle()}</h1>
-                        <h5>Question {currentQuestion + 1}/{questions.length}</h5>
-                        {elements}
-                        <div id ="quiz_form">
-                        <div id="mc-question-box">
-                        <div class = "code-toolbox">
-                        <form onSubmit={formik.handleSubmit}>
-                            <p id="quiz_question">Question</p>
-                            <SyntaxHighlighter id="quiz_code" language="python">
-                                {code}
-                            </SyntaxHighlighter>
-                            <br />
-                            <div className="row d-flex align-items-end">
-                                <div className="col">
-                                    <div role="group">
-                                    <div key={0} id="answer_options" className="radio-group">
-                                        <input id = "radio-check-0" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="0" onChange={formik.handleChange} />
-                                        <label id="label-0" className="ms-2"></label>
-                                        <br/>
-                                        <input id = "radio-check-1" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="1" onChange={formik.handleChange} />
-                                        <label id="label-1" className="ms-2"></label>
-                                        <br/>
-                                        <input id = "radio-check-2" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="2" onChange={formik.handleChange} />
-                                        <label id="label-2" className="ms-2"></label>
-                                        <br/>
-                                        <input id = "radio-check-3" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="3" onChange={formik.handleChange} />
-                                        <label id="label-3" className="ms-2"></label>
-                                        <br/>
-                                        <input id = "radio-check-4" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="4" onChange={formik.handleChange} />
-                                        <label id="label-4" className="ms-2"></label>
-                                        <br/>
-                                        <input id = "radio-check-5" type="radio" className="form-check-input" disabled={formik.isSubmitting} name="picked" value="5" onChange={formik.handleChange} />
-                                        <label id="label-5" className="ms-2"></label>
-                                        <br/>
-                                    </div>
-                                    </div>
-                                    <br/>
-                                    <button className="btn btn-success btn-block" type="submit" disabled={formik.isSubmitting}>Submit</button>
-                                </div>
-                                <div className="col">
-                                    <div onload = {show_point()}>
-                                        <div className="d-flex justify-content-start">
-                                            <div id = "p" className = "point me-2"></div>
-                                            <FontAwesomeIcon icon="fa-solid fa-coins" />
+                </div>
+            </div> */}
+            <div className="layout-card global-card-base" style={{ width: '100%' }}>
+                <div className="layout-card-header">
+                    <div className="layout-card-title">
+                        {getPageTitle()}
+                    </div>
+                    <div className="layout-card-right">
+                        <span>Question {currentQuestion + 1}/{questions.length}</span>
+                    </div>
+                </div>
+                <div className="layout-card-main">
+
+                    <div className="row flex-grow-1" id="quiz_box">
+                        <div className="quiz_box">
+                            <div className="quiz_inner_box">
+                                {elements}
+                                <div id="quiz_form">
+                                    <div id="mc-question-box">
+                                        <div class="code-toolbox">
+                                            <form onSubmit={formik.handleSubmit} ref={formRef}>
+                                                <p id="quiz_question">Question</p>
+                                                <SyntaxHighlighter id="quiz_code" language="python">
+                                                    {code}
+                                                </SyntaxHighlighter>
+                                                <div>
+                                                    <div>
+                                                        <div key={0} id="answer_options" className="radio-group">
+                                                            {
+                                                                currentQuestionData?.map((item, i) => {
+                                                                    return (<div className='radio-item' key={item} onClick={() => handleSubmitData(item, i)}>
+                                                                        <span className='radio-ack'>{String.fromCharCode(i + 'A'.charCodeAt())}</span>
+                                                                        <span className='radio-label'>{item}</span>
+                                                                    </div>);
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="row d-flex align-items-end" style={{ marginTop: '16px' }}>
+                                                    <div className="col" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+
+                                                        <button className="btn btn-warning" type="button" onClick={displayHint}>Hint</button>
+
+                                                        <div onload={show_point()}>
+                                                            <div className="d-flex justify-content-start">
+                                                                <div id="p" className="point me-2"></div>
+                                                                <FontAwesomeIcon icon="fa-solid fa-coins" />
+                                                            </div>
+                                                            <div className="pointdescription">10 <FontAwesomeIcon icon="fa-solid fa-coins" /> are need to use a hint.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col">
+                                                        <p className={errorTips ? 'error-tip' : ''}>{currentExplanation !== "" ? currentExplanation : ""}</p>
+                                                        <button className="btn btn-primary" hidden={!showNextBtn || currentQuestion + 1 >= questions.length} onClick={nextQuestion}>Next question</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div className = "pointdescription">10 <FontAwesomeIcon icon="fa-solid fa-coins" /> are need to use a hint.</div>
                                     </div>
-                                    <button className="btn btn-warning mt-3" type="button" onClick={displayHint}>Hint</button>
-                                </div>
-                                <div className="col">
-                                    <p>{currentExplanation !== "" ? currentExplanation : ""}</p>
-                                    <button className="btn btn-primary" hidden={!showNextBtn || currentQuestion + 1 >= questions.length} onClick={nextQuestion}>Next question</button>
                                 </div>
                             </div>
-                        </form>
-                        </div>
-                    </div>
                         </div>
                     </div>
                 </div>

@@ -9,9 +9,6 @@ const Badges = (props)=> {
 
     return (
         <div>
-            {/* <h1><center>Badges</center>
-            </h1> */}
-            <br/>
             <Grid>
                 <Row>
                     <Col size={1}>

@@ -95,12 +95,12 @@ function LoginComponent(props) {
         // This must be true.
         handleCodeInApp: true,
         iOS: {
-          bundleId: 'com.example.ios'
+            bundleId: 'com.example.ios'
         },
         android: {
-          packageName: 'com.example.android',
-          installApp: true,
-          minimumVersion: '12'
+            packageName: 'com.example.android',
+            installApp: true,
+            minimumVersion: '12'
         },
         dynamicLinkDomain: 'https://learningpython.page.link'
     }
@@ -110,21 +110,21 @@ function LoginComponent(props) {
         // console.log("here")
         //Built in firebase function responsible for sending the verification email
         sendSignInLinkToEmail(auth, email, actionCodeSettings)
-        .then(() => {
-            // The link was successfully sent. Inform the user.
-            // Save the email locally so you don't need to ask the user for it again
-            // if they open the link on the same device.
-            // console.log("here2")
-            window.localStorage.setItem('emailForSignIn', email);
-            console.log("Verification email is sent")
-            // ...
-        })
-        .catch((error) => {
-            console.log("Error")
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ...
-        })
+            .then(() => {
+                // The link was successfully sent. Inform the user.
+                // Save the email locally so you don't need to ask the user for it again
+                // if they open the link on the same device.
+                // console.log("here2")
+                window.localStorage.setItem('emailForSignIn', email);
+                console.log("Verification email is sent")
+                // ...
+            })
+            .catch((error) => {
+                console.log("Error")
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ...
+            })
     }
 
     /**
@@ -170,7 +170,7 @@ function LoginComponent(props) {
                     else {
                         expertise = 1
                     }
-                    
+
                     const student = new Student(uuidv4(), name, email, expertise, null, false, [], 1, [], 0, [])
                     // console.log('here1')
                     // ToDo: if student already exists, do not create new student
@@ -187,21 +187,22 @@ function LoginComponent(props) {
                     // sendVerificationEmail()
                     const user = userCredential.user;
                     sendEmailVerification(user)
-                    .then(() => {
-                        // Email verification sent!
-                        // let msg = 'An email verification link has been sent to ' + user.email;
-                        // document.querySelector('.success.email_msg').innerHTML=msg;
-                    });
+                        .then(() => {
+                            // Email verification sent!
+                            // let msg = 'An email verification link has been sent to ' + user.email;
+                            // document.querySelector('.success.email_msg').innerHTML=msg;
+                        });
                     // await sendEmailVerification(userCredential.user);
                     loginSuccess(student.email, student.uuid)
                 })
                 .catch((error) => {
                     if (error.code == "auth/email-already-in-use") {
-                        alert("The email address is already in use") }
+                        alert("The email address is already in use")
+                    }
                 })
-                // sendEmailVerification().then(function(){
-                //     console.log('email sent');
-                // }).catch('email not sent');
+            // sendEmailVerification().then(function(){
+            //     console.log('email sent');
+            // }).catch('email not sent');
         } else {
             alert('Please ensure that your email is @sfu.ca and that your password is at least 6 characters long.')
         }
@@ -210,7 +211,7 @@ function LoginComponent(props) {
         const login_area = document.getElementById('login-area');
         login_area.innerHTML = `<h2>Login Success!</h2><div>uid: ${uid}</div><div>email: ${email}</div>`;
     }
-      
+
 
     /**
      * Handles the sign in form submission
@@ -225,20 +226,22 @@ function LoginComponent(props) {
         if (validateSignIn({ email, password })) {
             // Do firebase login
             signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                if(!auth.currentUser.emailVerified) {
-                    alert("Email is not verified")
-                }
-                else {getStudent(email).then((student) => {
-                    localStorage.setItem('auth', JSON.stringify(student))
-                    setUser(student)
-                })}
-            })
-            .catch((error) => {
-                // login error
-                // ToDo: handle error message
-                alert(error.message)
-            })
+                .then(() => {
+                    if (!auth.currentUser.emailVerified) {
+                        alert("Email is not verified")
+                    }
+                    else {
+                        getStudent(email).then((student) => {
+                            localStorage.setItem('auth', JSON.stringify(student))
+                            setUser(student)
+                        })
+                    }
+                })
+                .catch((error) => {
+                    // login error
+                    // ToDo: handle error message
+                    alert(error.message)
+                })
         } else {
             alert('Please ensure that your email is @sfu.ca.')
         }
@@ -279,16 +282,16 @@ function LoginComponent(props) {
      * Sends an email to the user with a link to reset their password
      * @param {Event} e 
      */
-     const question_shown = (e) => {
+    const question_shown = (e) => {
         // e.preventDefault()
         console.log("here")
-        if(document.getElementById("demo").style.visibility == "hidden") {
+        if (document.getElementById("demo").style.visibility == "hidden") {
             console.log("here")
             document.getElementById("demo").style.visibility = "visible"
             document.getElementById("submit_button").style.visibility = "visible"
             document.getElementById("submit_button2").style.visibility = "invisible"
         }
-        else{
+        else {
             console.log("here2")
             document.getElementById("demo").style.visibility = "hidden"
             document.getElementById("submit_button").style.visibility = "hidden"
@@ -298,64 +301,66 @@ function LoginComponent(props) {
 
     if (signUp) {
         return (
-        <div className = "signup_box">
-            <div className="signup text-center">
-                <form className="form-signin">
-                    <br></br>
-                    <h1 className="text-2xl xl:text-3xl font-extrabold">Sign Up</h1>
-                    <p className="mb-3 text-muted">
-                        Already have an account? <a href="#" onClick={() => setSignUp(false)}>Sign in</a>.
-                    </p>
-                    <input type="text" id="inputName" className="form-control input-sm mb-2" placeholder="Name" required="True" ref={signUpNameRef} />
-                    <input type="email" id="inputEmail" className="form-control input-sm mb-2" placeholder="Email address" required="True" ref={signUpEmailRef} />
-                    <input type="password" id="inputPassword" className="form-control input-sm mb-2" placeholder="Password" required="True" ref={signUpPasswordRef} />
-                    <input type="password" id="inputPasswordRepeated" className="form-control input-sm mb-2" placeholder="Repeat password" required="True" ref={signUpPasswordConfirmRef} />
-                </form>
-                <form className="level_switch">
-                    <span className = "level_selection">Do you have experience in Programming?</span>
-                    <p className="level_switch_muted">
-                        If you choose "having experience", we will give some questions to check your expertise.
+            <div className="signup_box">
+                <div className="signup text-center">
+                    <form className="form-signin">
                         <br></br>
-                        If you don't have, please feel free to choose "No".
-                    </p>
-                    <label className="switch">
-                        <input type="checkbox"/>
-                        <span className="slider" onClick = {question_shown}></span>
-                    </label>
-                    {/* <br></br> */}
-                    {/* <span class = "level_selection">Do you have experience in Programming?</span> */}
-                    {/* <button className="button_level" type="submit" onClick={handleSignUp}>Yes</button> */}
-                    {/* <button className="button_level2" type="submit" onClick={handleSignUp}>No</button> */}
-                    <br></br>
-                    <br></br>
-                    {/* <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button> */}
-                    <button className="cta" id = "submit_button" type="submit" onClick={handleSignUp}>
-                        <span>Sign up</span>
-                        <svg viewBox="0 0 13 10" height="10px" width="15px">
-                            <path d="M1,5 L11,5"></path>
-                            <polyline points="8 1 12 5 8 9"></polyline>
-                        </svg>
-                    </button>
-                    {/* this is the tooltip part, the point is using span thing. I changed the given code, so you can change is back to the given code. */}
-                    {/* <p>
+                        <h1 className="text-2xl xl:text-3xl font-extrabold">Sign Up</h1>
+                        <p className="mb-3 text-muted">
+                            Already have an account? <a href="#" onClick={() => setSignUp(false)}>Sign in</a>.
+                        </p>
+                        <input type="text" id="inputName" className="form-control input-sm mb-2" placeholder="Name" required="True" ref={signUpNameRef} />
+                        <input type="email" id="inputEmail" className="form-control input-sm mb-2" placeholder="Email address" required="True" ref={signUpEmailRef} />
+                        <input type="password" id="inputPassword" className="form-control input-sm mb-2" placeholder="Password" required="True" ref={signUpPasswordRef} />
+                        <input type="password" id="inputPasswordRepeated" className="form-control input-sm mb-2" placeholder="Repeat password" required="True" ref={signUpPasswordConfirmRef} />
+                        <form className="level_switch">
+                            <span className="level_selection">Do you have experience in Programming?</span>
+                            <p className="level_switch_muted">
+                                If you choose "having experience", we will give some questions to check your expertise.
+                                <br></br>
+                                If you don't have, please feel free to choose "No".
+                            </p>
+                            <label className="switch">
+                                <input type="checkbox" />
+                                <span className="slider" onClick={question_shown}></span>
+                            </label>
+                            {/* <br></br> */}
+                            {/* <span class = "level_selection">Do you have experience in Programming?</span> */}
+                            {/* <button className="button_level" type="submit" onClick={handleSignUp}>Yes</button> */}
+                            {/* <button className="button_level2" type="submit" onClick={handleSignUp}>No</button> */}
+                            <br></br>
+                            <br></br>
+                            {/* <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button> */}
+                            {/* <button className="cta" id="submit_button" type="submit" onClick={handleSignUp}>
+                                <span>Sign up</span>
+                                <svg viewBox="0 0 13 10" height="10px" width="15px">
+                                    <path d="M1,5 L11,5"></path>
+                                    <polyline points="8 1 12 5 8 9"></polyline>
+                                </svg>
+                            </button> */}
+
+                            {/* <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button> */}
+
+                            {/* this is the tooltip part, the point is using span thing. I changed the given code, so you can change is back to the given code. */}
+                            {/* <p>
                         What is your expertise level in<br></br>
                         <span className="tooltip">
                             conditional statements?<span className="tooltip-text">Example</span>
                         </span>
                     </p> */}
-                    {/* <input type="range" className="form-range" id="expertiseRange" min = "1" max = "5" step="1" defaultValue = "3" required = "True" list = "tickmarks" ref={expertiseLevel}/> */}
-                    {/* <pre className="range-label">(Novice)1        2        3        4         5(Expert)</pre> */}
-                    {/* <pre className="Question">What is the output of the following code?</pre> */}
-                    <br></br>
-                </form>
-                <div>
-                <form className = "signup_question_box">
-                <form className = "white_box" id = "demo"></form>
-                <form className = "title-question">
-                    <br></br>
-                    <span className="title-question">Let's check your expertise level in python.</span>
-                    {/* <br></br> */}
-                    {/* <div className="question" id = "question-1">
+                            {/* <input type="range" className="form-range" id="expertiseRange" min = "1" max = "5" step="1" defaultValue = "3" required = "True" list = "tickmarks" ref={expertiseLevel}/> */}
+                            {/* <pre className="range-label">(Novice)1        2        3        4         5(Expert)</pre> */}
+                            {/* <pre className="Question">What is the output of the following code?</pre> */}
+                            <br></br>
+                        </form>
+                        <div>
+                            <form className="signup_question_box">
+                                <form className="white_box" id="demo"></form>
+                                <form className="title-question">
+                                    <br></br>
+                                    <span className="title-question">Let's check your expertise level in python.</span>
+                                    {/* <br></br> */}
+                                    {/* <div className="question" id = "question-1">
                     <div class ="question-content">
                         <p>
                             <span class = "question_num">1. </span>
@@ -380,197 +385,191 @@ function LoginComponent(props) {
                         <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer1} />
                     </div>
                     </div> */}
-                    <div className="question" id = "question-2">
-                    <div class ="question-content">
-                        <p>
-                            <span class = "question_num">1. </span>
-                            "What is the output of the following code?"
-                        </p>
-                        <div class = "code-toolbox">
-                            <pre id="syntax" class = "language">
-                                <code className="language-python">
-                                    myNumber 
-                                    <span class = "token operator"> = </span>
-                                    <span class = "token number">1</span>
-                                    <br></br>
-                                    <span class = "token keyword">if </span>
-                                     myNumber 
-                                    <span class = "token operator"> % </span>
-                                     2 
-                                    <span class = "token operator"> == </span>
-                                    0
-                                    <span class = "token punctuation">:</span>
-                                    <br></br>
-                                    <span className="token keyword">    print</span>
-                                    <span className="token punctuation">(</span>
-                                    "correct"
-                                    <span class = "token punctuation">)</span>
-                                    <br></br>
-                                    <span class = "token keyword">else</span>
-                                    <span class = "token punctuation">:</span>
-                                    <br></br>
-                                    <span className="token keyword">    print</span>
-                                    <span className="token punctuation">(</span>
-                                    myNumber
-                                    <span class = "token punctuation">)</span>
-                                </code>
-                            </pre>
-                        </div>
-                        <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer2} />
-                    </div>
-                    </div>
-                    <div className="question" id = "question-3">
-                    <div class ="question-content">
-                        <p>
-                            <span class = "question_num">2. </span>
-                            "What is the output of the following code?"
-                        </p>
-                        <div class = "code-toolbox">
-                            <pre id="syntax" class = "language">
-                                <code className="language-python">
-                                    <span className="token keyword">def </span>
-                                    <span className="token function">calculate</span>
-                                    <span className="token punctuation">(</span>
-                                    num1
-                                    <span className="token punctuation">, </span>
-                                    num2
-                                    <span class = "token operator"> = </span>
-                                    <span className="token number">1</span>
-                                    <span className="token punctuation">):</span>
-                                    <br></br>
-                                    <span className="to">    numList</span>
-                                    <span class = "token operator"> = </span>
-                                    ""
-                                    <br></br>
-                                    <span className="token keyword">    for </span>
-                                    i
-                                    <span className="token keyword"> in range</span>
-                                    <span className="token punctuation">(</span>
-                                    0, num1, num2
-                                    <span className="token punctuation">):</span>
-                                    <br></br>
-                                    <span className="to">        numList += str(i)</span>
-                                    <br></br>
-                                    <span className="token keyword">    return</span>
-                                    <span className="token function"> len</span>
-                                    <span className="token punctuation">(</span>
-                                    numList
-                                    <span className="token punctuation">)</span>
-                                    {/* <span className="tn">    res</span>
-                                    <span class = "token operator"> = </span>
-                                    num1
-                                    <span class = "token operator"> * </span>
-                                    num2 */}
-                                    <br></br>
-                                    <br></br>
-                                    result
-                                    <span class = "token operator"> = </span>
-                                    <span className="token function">calculate</span>
-                                    <span className="token punctuation">(</span>
-                                    10
-                                    <span className="token punctuation">,</span>
-                                    2
-                                    {/* 0, 0.5, 1.0, 1.5, 2.0, 2.5 */}
-                                    <span className="token punctuation">)</span>
-                                    <br></br>
-                                    <span className="token keyword">print</span>
-                                    <span className="token punctuation">(</span>
-                                    result
-                                    <span class = "token punctuation">)</span>
-                                </code>
-                            </pre>
-                        </div>
-                        <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer3} />
-                    </div>
-                    </div>
-                    <div className="question" id = "question-3">
-                    <div class ="question-content">
-                        <p>
-                            <span class = "question_num">3. </span>
-                            "What is the output of the following code?"
-                        </p>
-                        <div class = "code-toolbox">
-                            <pre id="syntax" class = "language">
-                                <code className="language-python">
-                                    <span className="token keyword">def </span>
-                                    <span className="token function">calculate</span>
-                                    <span className="token punctuation">(</span>
-                                    num1
-                                    <span className="token punctuation">, </span>
-                                    num2
-                                    <span class = "token operator"> = </span>
-                                    <span className="token number">1</span>
-                                    <span className="token punctuation">):</span>
-                                    <br></br>
-                                    <span className="to">     numList</span>
-                                    <span class = "token operator"> = </span>
-                                    []
-                                    <br></br>
-                                    <span className="to">     result</span>
-                                    <span class = "token operator"> = </span>
-                                    0
-                                    <br></br>
-                                    <span className="token keyword">    for </span>
-                                    i
-                                    <span className="token keyword"> in range</span>
-                                    <span className="token punctuation">(</span>
-                                    0, num1, num2
-                                    <span className="token punctuation">):</span>
-                                    <br></br>
-                                    <span className="to">        numList.append(i)</span>
-                                    <br></br>
-                                    <span className="token keyword">    for </span>
-                                    num
-                                    <span className="token keyword"> in </span>
-                                    numList
-                                    <span className="token punctuation">:</span>
-                                    <br></br>
-                                    <span className="to">        result</span>
-                                    <span class = "token operator"> += </span>
-                                    <span className="to">num</span>
-                                    <br></br>
-                                    <span className="token keyword">    return </span>
-                                    result
-                                    {/* <span className="tn">    res</span>
+                                    <div className="question" id="question-2">
+                                        <div class="question-content">
+                                            <p>
+                                                <span class="question_num">1. </span>
+                                                "What is the output of the following code?"
+                                            </p>
+                                            <div class="code-toolbox">
+                                                <pre id="syntax" class="language">
+                                                    <code className="language-python">
+                                                        myNumber
+                                                        <span class="token operator"> = </span>
+                                                        <span class="token number">1</span>
+                                                        <br></br>
+                                                        <span class="token keyword">if </span>
+                                                        myNumber
+                                                        <span class="token operator"> % </span>
+                                                        2
+                                                        <span class="token operator"> == </span>
+                                                        0
+                                                        <span class="token punctuation">:</span>
+                                                        <br></br>
+                                                        <span className="token keyword">    print</span>
+                                                        <span className="token punctuation">(</span>
+                                                        "correct"
+                                                        <span class="token punctuation">)</span>
+                                                        <br></br>
+                                                        <span class="token keyword">else</span>
+                                                        <span class="token punctuation">:</span>
+                                                        <br></br>
+                                                        <span className="token keyword">    print</span>
+                                                        <span className="token punctuation">(</span>
+                                                        myNumber
+                                                        <span class="token punctuation">)</span>
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                            <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer2} />
+                                        </div>
+                                    </div>
+                                    <div className="question" id="question-3">
+                                        <div class="question-content">
+                                            <p>
+                                                <span class="question_num">2. </span>
+                                                "What is the output of the following code?"
+                                            </p>
+                                            <div class="code-toolbox">
+                                                <pre id="syntax" class="language">
+                                                    <code className="language-python">
+                                                        <span className="token keyword">def </span>
+                                                        <span className="token function">calculate</span>
+                                                        <span className="token punctuation">(</span>
+                                                        num1
+                                                        <span className="token punctuation">, </span>
+                                                        num2
+                                                        <span class="token operator"> = </span>
+                                                        <span className="token number">1</span>
+                                                        <span className="token punctuation">):</span>
+                                                        <br></br>
+                                                        <span className="to">    numList</span>
+                                                        <span class="token operator"> = </span>
+                                                        ""
+                                                        <br></br>
+                                                        <span className="token keyword">    for </span>
+                                                        i
+                                                        <span className="token keyword"> in range</span>
+                                                        <span className="token punctuation">(</span>
+                                                        0, num1, num2
+                                                        <span className="token punctuation">):</span>
+                                                        <br></br>
+                                                        <span className="to">        numList += str(i)</span>
+                                                        <br></br>
+                                                        <span className="token keyword">    return</span>
+                                                        <span className="token function"> len</span>
+                                                        <span className="token punctuation">(</span>
+                                                        numList
+                                                        <span className="token punctuation">)</span>
+                                                        {/* <span className="tn">    res</span>
                                     <span class = "token operator"> = </span>
                                     num1
                                     <span class = "token operator"> * </span>
                                     num2 */}
-                                    <br></br>
-                                    <br></br>
-                                    result
+                                                        <br></br>
+                                                        <br></br>
+                                                        result
+                                                        <span class="token operator"> = </span>
+                                                        <span className="token function">calculate</span>
+                                                        <span className="token punctuation">(</span>
+                                                        10
+                                                        <span className="token punctuation">,</span>
+                                                        2
+                                                        {/* 0, 0.5, 1.0, 1.5, 2.0, 2.5 */}
+                                                        <span className="token punctuation">)</span>
+                                                        <br></br>
+                                                        <span className="token keyword">print</span>
+                                                        <span className="token punctuation">(</span>
+                                                        result
+                                                        <span class="token punctuation">)</span>
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                            <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer3} />
+                                        </div>
+                                    </div>
+                                    <div className="question" id="question-3">
+                                        <div class="question-content">
+                                            <p>
+                                                <span class="question_num">3. </span>
+                                                "What is the output of the following code?"
+                                            </p>
+                                            <div class="code-toolbox">
+                                                <pre id="syntax" class="language">
+                                                    <code className="language-python">
+                                                        <span className="token keyword">def </span>
+                                                        <span className="token function">calculate</span>
+                                                        <span className="token punctuation">(</span>
+                                                        num1
+                                                        <span className="token punctuation">, </span>
+                                                        num2
+                                                        <span class="token operator"> = </span>
+                                                        <span className="token number">1</span>
+                                                        <span className="token punctuation">):</span>
+                                                        <br></br>
+                                                        <span className="to">     numList</span>
+                                                        <span class="token operator"> = </span>
+                                                        []
+                                                        <br></br>
+                                                        <span className="to">     result</span>
+                                                        <span class="token operator"> = </span>
+                                                        0
+                                                        <br></br>
+                                                        <span className="token keyword">    for </span>
+                                                        i
+                                                        <span className="token keyword"> in range</span>
+                                                        <span className="token punctuation">(</span>
+                                                        0, num1, num2
+                                                        <span className="token punctuation">):</span>
+                                                        <br></br>
+                                                        <span className="to">        numList.append(i)</span>
+                                                        <br></br>
+                                                        <span className="token keyword">    for </span>
+                                                        num
+                                                        <span className="token keyword"> in </span>
+                                                        numList
+                                                        <span className="token punctuation">:</span>
+                                                        <br></br>
+                                                        <span className="to">        result</span>
+                                                        <span class="token operator"> += </span>
+                                                        <span className="to">num</span>
+                                                        <br></br>
+                                                        <span className="token keyword">    return </span>
+                                                        result
+                                                        {/* <span className="tn">    res</span>
                                     <span class = "token operator"> = </span>
-                                    <span className="token function">calculate</span>
-                                    <span className="token punctuation">(</span>
-                                    10
-                                    <span className="token punctuation">,</span>
-                                    3
-                                    {/* 0, 0.5, 1.0, 1.5, 2.0, 2.5 */}
-                                    <span className="token punctuation">)</span>
-                                    <br></br>
-                                    <span className="token keyword">print</span>
-                                    <span className="token punctuation">(</span>
-                                    result
-                                    <span class = "token punctuation">)</span>
-                                </code>
-                            </pre>
+                                    num1
+                                    <span class = "token operator"> * </span>
+                                    num2 */}
+                                                        <br></br>
+                                                        <br></br>
+                                                        result
+                                                        <span class="token operator"> = </span>
+                                                        <span className="token function">calculate</span>
+                                                        <span className="token punctuation">(</span>
+                                                        10
+                                                        <span className="token punctuation">,</span>
+                                                        3
+                                                        {/* 0, 0.5, 1.0, 1.5, 2.0, 2.5 */}
+                                                        <span className="token punctuation">)</span>
+                                                        <br></br>
+                                                        <span className="token keyword">print</span>
+                                                        <span className="token punctuation">(</span>
+                                                        result
+                                                        <span class="token punctuation">)</span>
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                            <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer4} />
+                                        </div>
+                                    </div>
+                                    <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button>
+                                </form>
+                            </form>
                         </div>
-                        <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer4} />
-                    </div>
-                    </div>
-                    <button className="cta2" id = "submit_button2" type="submit" onClick={handleSignUp}>
-                        <span>Sign up</span>
-                        <svg viewBox="0 0 13 10" height="10px" width="15px">
-                            <path d="M1,5 L11,5"></path>
-                            <polyline points="8 1 12 5 8 9"></polyline>
-                        </svg>
-                    </button>
-                    {/* <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button> */}
-                </form>
-                </form>
+                    </form>
+                </div>
             </div>
-            </div>
-        </div>
         )
     } else {
         return (

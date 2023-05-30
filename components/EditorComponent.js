@@ -27,11 +27,11 @@ export default function EditorComponent(props) {
     const { challengeNumber, setChallengeNumber, challengeQuestion, challengeAnswer, user, score, setScore, openedModule, setOpenedModule, setToast, setPage } = useContext(Context)
 
     const moduleName = openedModule.replaceAll('-', '_')
-    const currentQuestion = challengeQuestion.find(x => x.id === moduleName).questions.find(x => x.id === challengeNumber)
-    const currentQuestionNumber = challengeQuestion.find(x => x.id === moduleName).questions.indexOf(challengeQuestion.find(x => x.id === moduleName).questions.find(x => x.id === challengeNumber)) + 1
+    const currentQuestion = challengeQuestion.find(x => x.id === moduleName)?.questions.find(x => x.id === challengeNumber)
+    const currentQuestionNumber = challengeQuestion.find(x => x.id === moduleName)?.questions.indexOf(challengeQuestion.find(x => x.id === moduleName)?.questions.find(x => x.id === challengeNumber)) + 1
     let nextQuestionNumber = -1
-    if (challengeQuestion.find(x => x.id === moduleName).questions[currentQuestionNumber]) {
-        nextQuestionNumber = challengeQuestion.find(x => x.id === moduleName).questions[currentQuestionNumber].id
+    if (challengeQuestion.find(x => x.id === moduleName)?.questions[currentQuestionNumber]) {
+        nextQuestionNumber = challengeQuestion.find(x => x.id === moduleName)?.questions[currentQuestionNumber].id
     }
 
     // State for the code's output
