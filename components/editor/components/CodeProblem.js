@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Component, useRef } from "react";
 import Problem from "./Problem";
 import { doc, getDoc, setDoc, updateDoc, addDoc} from "firebase/firestore"; 
-import { getStudentById, getStudent,Student, giveStudentScoreCode, takeStudentScoreCode, getStudentScoreCode} from "../../../data/Students";
+import { getStudentById, getStudent,Student, giveStudentScoreCode, takeStudentScoreCode, getStudentScoreCode, increaseStudentNumChallenge} from "../../../data/Students";
 import {getQuestionUUID} from "../../../data/questions.js"
 import {db} from "../../../firebase";
 import { Modal, Button } from "react-bootstrap";
@@ -314,6 +314,7 @@ export default class CodeProblem extends Component {
                "questionID": this.props.question.questionID,
                "completed": completed,
               });
+              // TODO:  increase number of solved challenge questions increaseStudentNumChallenge(this.props)
               giveStudentScoreCode(this.props.email,100)
             }
             point = point + 100
@@ -328,6 +329,7 @@ export default class CodeProblem extends Component {
           "completed": completed,
         });
         if (completed){
+          // TODO:  increase number of solved challenge questions increaseStudentNumChallenge(this.props)
           giveStudentScoreCode(this.props.email,this.state.grade);
           this.setState({completed: true})
           point = point + 100

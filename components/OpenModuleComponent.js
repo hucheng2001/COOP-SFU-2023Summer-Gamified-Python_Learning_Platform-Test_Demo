@@ -1,6 +1,10 @@
 import { useEffect, useState, useContext, memo, useRef } from 'react'
 import { Modal } from "react-bootstrap";
-import { giveStudentScore, solvedQuestionCheck, solvedQuestionUpdate, getStudentScore, takeStudentScore, questionHintCheck, questionHintUpdate, getModuleBonus, moduleBonusReceived } from '../data/Students'
+import {
+    giveStudentScore, solvedQuestionCheck, solvedQuestionUpdate, getStudentScore, takeStudentScore,
+    questionHintCheck, questionHintUpdate, getModuleBonus, moduleBonusReceived, updateStudentLevel,
+    getStudentLevel, increaseStudentNumMCQ
+} from '../data/Students'
 import { getAllModuleQuestions } from '../data/QuizQuestions'
 import { getPersonalization } from "../data/Personalization"
 import { useFormik } from 'formik'
@@ -15,6 +19,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import SideBar from './SideBarComponent'
+import eventBus from './eventbus';
 // import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function HintModal(props) {
@@ -78,6 +83,8 @@ function OpenModuleComponent(props) {
 
     // State for multiple choice questions
     const [questions, setQuestions] = useState([])
+    const [doubleCoin, setDoubleCoin] = useState(false)
+    const [moreTime, setMoreTime] = useState(false)
 
     // State for the currently open multiple choice question
     const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -162,8 +169,11 @@ function OpenModuleComponent(props) {
                 var bonusCoins = answerStreak * 5
 
                 // Standard amount of coins given is 10
+                // double 
                 var coinsAwarded = 10
-
+                if (setDoubleCoin) {
+                    coinsAwarded = coinsAwarded * 2;
+                }
                 // Max amount of bonus coins (from answer streaks) is 20
                 if (bonusCoins >= 20) {
                     bonusCoins = 20
@@ -173,23 +183,46 @@ function OpenModuleComponent(props) {
 
                 setAnswerStreak(answerStreak + 1)
                 setCurrentExplanation("✓ " + questions[currentQuestion].explanation)
+
+                // Nested thens are awkward but the order of async calls matter for properly displaying
+                // the user's new level if a new level is reached
                 checked.then(value => {
                     // If question has never been solved before, give coins and update question status
                     if (!value) {
+                        increaseStudentNumMCQ(user)
                         giveStudentScore(user, coinsAwarded)
                         solvedQuestionUpdate(user, moduleName, currentQuestion, true)
-                        setToast({
-                            title: "Correct!",
-                            message: `+${coinsAwarded} score \n Answer Streak: ${answerStreak + 1}🔥`
-                        })
-                    }
-                    else {
+                        let scoreAwardedPromise = giveStudentScore(user, coinsAwarded)
+
+                        scoreAwardedPromise.then(scoreAwarded => {
+                            let studentLevelChangedPromise = updateStudentLevel(user)
+
+                            studentLevelChangedPromise.then(studentLevelChanged => {
+                                let studentLevelPromise = getStudentLevel(user)
+
+                                studentLevelPromise.then(studentLevel => {
+                                    // If student's level has changed notify them in the toast
+                                    if (studentLevelChanged == true) {
+                                        setToast({
+                                            title: "Correct!",
+                                            message: <div>+{coinsAwarded} score<br />Answer Streak: {answerStreak + 1}🔥<br />You reached level {studentLevel}!</div>
+                                        });
+                                    } else {
+                                        setToast({
+                                            title: "Correct!",
+                                            message: <div>+{coinsAwarded} score<br />Answer Streak: {answerStreak + 1}🔥</div>
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    } else {
                         setToast({
                             title: "Good for trying again!",
                             message: `Answer Streak: ${answerStreak + 1}🔥`
-                        })
+                        });
                     }
-                })
+                });
                 values.picked = ''
                 setShowNextBtn(true)
 
@@ -204,8 +237,34 @@ function OpenModuleComponent(props) {
                             title: "Module Completion Bonus",
                             message: `+${bonusAward} score`
                         })
+                        increaseStudentNumMCQ(user)
                         giveStudentScore(user, bonusAward)
                         moduleBonusReceived(user, moduleName)
+
+                        // Again, nested thens are awkward but the order of async calls matter for properly displaying
+                        // the user's new level if a new level is reached
+                        scoreAwardedPromise.then(scoreAwarded => {
+                            let studentLevelChangedPromise = updateStudentLevel(user)
+
+                            studentLevelChangedPromise.then(studentLevelChanged => {
+                                let studentLevelPromise = getStudentLevel(user)
+
+                                studentLevelPromise.then(studentLevel => {
+                                    // If student's level has changed notify them in the toast
+                                    if (studentLevelChanged == true) {
+                                        setToast({
+                                            title: "Module Completion Bonus",
+                                            message: <div>+{bonusAward} score<br />You reached level {studentLevel}!</div>
+                                        });
+                                    } else {
+                                        setToast({
+                                            title: "Module Completion Bonus",
+                                            message: <div>+{coinsAwarded} score<br />Answer Streak: {answerStreak + 1}🔥</div>
+                                        });
+                                    }
+                                });
+                            });
+                        });
                     }
 
                 }
@@ -213,12 +272,20 @@ function OpenModuleComponent(props) {
                 if (values.options?.length > 2) {
                     formik.setSubmitting(false)
                 }
+                /* <<<<<<< components/OpenModuleComponent.js */
                 setCurrentExplanation("❌ " + questions[currentQuestion].explanation);
                 setWrongQuestions(wrongQuestions + 1);
+                setAnswerStreak(0)
                 setErrorTips(true);
                 setTimeout(() => {
                     setErrorTips(false);
                 }, 300);
+                /* =======
+                                setAnswerStreak(0)
+                                setCurrentExplanation("❌ " + questions[currentQuestion].explanation)
+                                setWrongQuestions(wrongQuestions + 1)
+                >>>>>>> components/OpenModuleComponent.js
+                */
 
                 if (wrongQuestions + 1 >= questions.length && showPersonalization === null) {
                     setShowPersonalization(true)
@@ -336,11 +403,9 @@ function OpenModuleComponent(props) {
     const refreshFormik = () => {
         formik.resetForm({})
         for (let i = 0; i < 6; i++) {
-            var currentRadio = document.getElementById(`radio-check-${i}`);
-            /*
-            currentRadio.checked = false;
+            // var currentRadio = document.getElementById(`radio-check-${i}`);
+            // currentRadio.checked = false;
             currentRadio.style.visibility = "visible";
-            */
         }
         document.getElementsByClassName("form-check-input").checked = false;
         formik.setFieldValue('picked', '')
@@ -433,6 +498,7 @@ function OpenModuleComponent(props) {
             // If hint has not been bought before, reduce user score
             if (!value) {
                 takeStudentScore(user, 10)
+                updateStudentLevel(user)
             }
         })
         questionHintUpdate(user, moduleName, currentQuestion, true)
@@ -450,13 +516,13 @@ function OpenModuleComponent(props) {
 
 
     return (
-        <div className="d-flex flex-row flex-grow-1" style={{ marginLeft: sideOpen ? '260px' : '90px', transition: 'all .2s' }}>
+        <div className="flex-grow-1" style={{ marginLeft: sideOpen ? '260px' : '90px', transition: 'all .2s', }}>
             <SideBar sideOut={sideOut} onToggle={(v) => setSideOpen(v)} moduleName={moduleName.replaceAll('-', '_')} />
             {/* <div className="bg-primary text-dark bg-opacity-25 rounded ps-2 pt-4 me-5 mb-4">
                 <div id = "quiz_list" class = "quiz_list3">
                 </div>
             </div> */}
-            <div className="layout-card global-card-base" style={{ width: '100%' }}>
+            <div className="layout-card global-card-base" style={{ width: '100%', marginBottom: 20 }}>
                 <div className="layout-card-header">
                     <div className="layout-card-title">
                         {getPageTitle()}
@@ -517,6 +583,22 @@ function OpenModuleComponent(props) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div className="layout-card global-card-base" style={{ width: '100%' }}>
+                <div className="layout-card-header">
+                    <div className="layout-card-title">
+                        Property
+                    </div>
+                </div>
+                <div className="layout-card-main">
+                    <div style={{ display: 'flex' }}>
+                        {/* Double Coins */}
+                        <div onClick={() => setDoubleCoin(true)} style={{ backgroundColor: doubleCoin ? '#9e9e9e' : '#673ab7', textAlign: 'center', padding: '12px 24px', borderRadius: 8, cursor: 'pointer' }}>Double Coin</div>
+                        <div onClick={() => {setMoreTime(true)
+                            eventBus.emit('moreTime');
+                        }} style={{ backgroundColor: moreTime ? '#9e9e9e' : '#673ab7', padding: '12px 24px', textAlign: 'center', borderRadius: 8, cursor: 'pointer' }}>More Time</div>
                     </div>
                 </div>
             </div>

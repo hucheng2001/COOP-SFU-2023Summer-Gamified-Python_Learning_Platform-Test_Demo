@@ -23,12 +23,27 @@ export default function LeaderboardPageComponent() {
     }, [])
 
     const labels = [{
+/* <<<<<<< components/leaderboard/LeaderboardPageComponent.js */
         rank: "Rank",
         name: "Name",
         score: "Score",
         mcqsolved: "MCQ's Solved",
         challsolved: "Challenge Questions Solved",
+        badges: "Badges",
+        rank: "Rank",
+        name: "Name",
+        score: "Score",
+        num_mcq_solved: "Multiple Choice",
+        num_challenge_solved: "Challenge Questions",
         badges: "Badges"
+/* =======
+        rank : "Rank",
+        name : "Name", 
+        score : "Score",
+        num_mcq_solved : "Multiple Choice",
+        num_challenge_solved : "Challenge Questions",
+        badges : "Badges"
+>>>>>>> components/leaderboard/LeaderboardPageComponent.js */
     }]
 
     return (

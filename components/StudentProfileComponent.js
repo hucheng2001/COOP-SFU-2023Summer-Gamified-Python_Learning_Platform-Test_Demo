@@ -23,17 +23,17 @@ export default function StudentProfileComponent(props) {
     // State for the user's friends
     const [friends, setFriends] = useState([])
 
-    /**
-     * Loads user's achievements.
-     */
-    const loadAchievements = () => {
-        const studentAchievements = profileView.achievements
-        const achievements = achievementsJson.achievements.filter(a => studentAchievements.includes(a.id))
+    // /**
+    //  * Loads user's achievements.
+    //  */
+    // const loadAchievements = () => {
+    //     const studentAchievements = profileView.achievements
+    //     const achievements = achievementsJson.achievements.filter(a => studentAchievements.includes(a.id))
 
-        setAchievements(achievements.map(achievement => {
-            return (<AchievementComponent id={achievement.id} description={achievement.description} emoji={achievement.emoji} />)
-        }))
-    }
+    //     setAchievements(achievements.map(achievement => {
+    //         return (<AchievementComponent id={achievement.id} description={achievement.description} emoji={achievement.emoji} />)
+    //     }))
+    // }
 
     /**
      * Updates the user's relationship with the student.
@@ -106,7 +106,7 @@ export default function StudentProfileComponent(props) {
 
     // loadAchievements only once, as well as the friendship status
     useEffect(() => {
-        loadAchievements()
+        // loadAchievements()
         loadRelationship()
         getFriendsList()
     }, [])

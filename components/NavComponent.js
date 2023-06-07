@@ -108,13 +108,34 @@ export default function NavComponent(props) {
 
     if (user) {
 
-        {/*                 
+        {/*             
+=======
+        navBarContents = (
+            <div className="collapse navbar-collapse" id="navbarText">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li className="nav-item">
+                        <a className={"nav-link" + checkIfActive(Pages.MODULES)} href="#" onClick={handleModulesClick}>Modules</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className={"nav-link" + checkIfActive(Pages.DISCUSSION)} href="#" onClick={handleDiscussionClick}>Discussion</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="#">Competition</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleProfileClick}>My Profile</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className={"nav-link" + checkIfActive(Pages.LEADERBOARD)} aria-current="page" href="#" onClick={handleLeaderboardClick}>Leaderboard</a>
+                    </li>
+                </ul>
+>>>>>>> components/NavComponent.js    
                 <span className="navbar-text">
                     Signed in as <UserLinkComponent uuid={user.uuid} name={user.name} showOwnName={true} />. (<a href="#" onClick={handleSignOut}>Sign out</a>)
                 </span>
                 {getToast()} */}
         navBarContents = (
-            <ul className="layout-nav-main-list">
+            <ul className="layout-nav-main-list" id="navbarText">
                 <li className="layout-nav-main-item">
                     <a className={"nav-link" + checkIfActive(Pages.MODULES)} href="#" onClick={handleModulesClick}>Modules</a>
                 </li>
@@ -128,7 +149,7 @@ export default function NavComponent(props) {
                     <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleProfileClick}>My Profile</a>
                 </li>
                 <li className="layout-nav-main-item">
-                    <a className={"nav-link" + checkIfActive(Pages.PROFILE)} aria-current="page" href="#" onClick={handleLeaderboardClick}>Leaderboard</a>
+                    <a className={"nav-link" + checkIfActive(Pages.LEADERBOARD)} aria-current="page" href="#" onClick={handleLeaderboardClick}>Leaderboard</a>
                 </li>
             </ul>
         )
@@ -145,10 +166,10 @@ export default function NavComponent(props) {
             </div>
             <div className='layout-top-nav-right'>
                 {user?.uuid ? <div className='layout-top-nav-icon-group'>
-                <span>{user?.score}</span>
+                    <span>165</span>
                     <img src={coinIcon.src} style={{ width: '16px' }} />
                 </div> : null}
-                <div className='layout-top-nav-icon-group' onClick={handleSignOut}>
+                <div className='layout-top-nav-icon-group'  style={{ cursor: 'pointer' }} onClick={handleSignOut}>
                     <span>{user?.name}</span>
                     <img src={exitIcon.src} style={{ width: '20px' }} />
                     <span>Sign out</span>

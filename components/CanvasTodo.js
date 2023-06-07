@@ -6,9 +6,9 @@ export default function AchievementComponent(props) {
   const ref = useRef();
   useEffect(() => {
     console.log('echarts', echarts);
-    // 基于准备好的dom，初始化echarts实例
+    // Based on prepared DOM, initialize ECharts instance
     const myChart = echarts.init(ref.current);
-    // 绘制图表
+    // Draw chart
     myChart.setOption({
 
       color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
@@ -59,7 +59,7 @@ export default function AchievementComponent(props) {
           },
           splitLine: {
             lineStyle: {
-              // 使用深浅的间隔色
+              // Use the shade interval color
               color: ['#0087ED']
             }
           },
@@ -74,7 +74,7 @@ export default function AchievementComponent(props) {
           },
           splitLine: {
             lineStyle: {
-              // 使用深浅的间隔色
+              // Use the shade interval color
               color: ['#0087ED'],
               width: 0,
             }

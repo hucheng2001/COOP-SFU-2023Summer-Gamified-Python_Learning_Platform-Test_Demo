@@ -44,9 +44,15 @@
 .item__name,
 .item__score,
 .item_header_rank,
+/* <<<<<<< styles/globals.css
 .item__mcqsolved,
 .item__challsolved,
-.item__badges {
+.item__badges 
+=======
+>>>>>>> styles/globals.css*/
+.item__num_mcq_solved,
+.item__num_challenge_solved,
+.item__badges  {
   margin-left: 10px;
   text-align: left;
   font-family: monospace;
@@ -474,3 +480,41 @@ button.btn.btn-success {
 .error-tip {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+
+/* Tab Navigation */
+ul.nav {
+  width: 60%;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #39A2DB;
+  border-radius: 0.5rem;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+}
+ul.nav li {
+  width: 50%;
+  font-weight: bold;
+  padding: 0.3rem;
+  height: auto;
+  list-style: none;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.7s;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+ul.nav li:nth-child(2) {
+  border-radius: 0;
+  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+ul.nav li:hover {
+  background: rgba(50, 224, 196, 0.15);
+}
+ul.nav li.active {
+  background: #39A2DB;
+}
+

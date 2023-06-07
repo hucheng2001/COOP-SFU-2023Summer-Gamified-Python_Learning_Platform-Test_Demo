@@ -1,0 +1,42 @@
+{
+    "answer_index": "2",
+    "answer_options": {
+        "0": "Iterating through a list from first to last element",
+        "1": "Iterating through both strings and tuples from last element",
+        "2": "Iterating through a dictionary from the last pair to the first one in reverse order",
+        "3": "Iterating through elements one stands prior in there list type objects for even number of times"
+    },
+    "code": "",
+    "explanation": "Python loop backwards mechanism allows looping through the elements of a dictionary from the last pair to the first one in reverse order",
+    "hint": "Think of iterating a sequence in reverse order",
+    "id": 0,
+    "question": "In Python loop, which scenario requires a loop backwards mechanism?"
+}
+{
+    "answer_index": "2",
+    "answer_options": {
+        "0": "for i in 10",
+        "1": "for i while i < 20",
+        "2": "for i in range(20)",
+        "3": "for 20 times i"
+    },
+    "code": "",
+    "explanation": "The proper way to create a loop using range in Python is 'for i in range(20)' .",
+    "hint": "range() function is used in the loop.",
+    "id": 1,
+    "question": "Select the correct syntax to generate a for loop with iterations from 0 to 19 in Python"
+}
+{
+    "answer_index": "1",
+    "answer_options": [
+        "range(4)",
+        "range(1,5)",
+        "range(5)",
+        "range(1,4)"
+    ],
+    "code": "",
+    "explanation": "For a loop iterating four times, we start the range at 1 and go up to 5, accounting for Python's half-open interval.",
+    "hint": "Python loop range uses half-open intervals.",
+    "id": 2,
+    "question": "Which is the correct range declaration for a Python loop iterating four times where the starting value should be 1?"
+}

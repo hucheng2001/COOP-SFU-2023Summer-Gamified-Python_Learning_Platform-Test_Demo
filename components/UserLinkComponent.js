@@ -12,6 +12,8 @@ export default function UserLinkComponent(props) {
     const { user, setPage, setProfileView } = useContext(Context)
     const [displayName, setDisplayName] = useState('')
 
+    console.log(user.uuid, props.uuid, user.uuid === props.uuid)
+
     const openUser = (e) => {
         e.preventDefault()
 

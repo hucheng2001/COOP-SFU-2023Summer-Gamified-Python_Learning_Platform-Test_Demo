@@ -6,7 +6,10 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useContext } from 'react'
 import React, { useState, useEffect } from 'react';
-import { getStudentScore, giveStudentScore, setDateLastVisited, setAttendanceStreak, getDateLastVisited, getAttendanceStreak } from '../data/Students'
+import {
+    getStudentScore, giveStudentScore, setDateLastVisited, setAttendanceStreak, getDateLastVisited,
+    getAttendanceStreak, updateStudentLevel, getStudentLevel
+} from '../data/Students'
 import Context from '../context/Context'
 import OpenModuleComponent from './OpenModuleComponent'
 import EditorComponent from './EditorComponent'
@@ -117,13 +120,29 @@ export default function HomePageComponent() {
                     setAttendanceStreak(user, 1)
                     giveStudentScore(user, points)
                 }
-
+                let toastMessage = `You earned ${points} coins for visiting today`
+                // Eventual boolean
+                let studentLevelChanged = updateStudentLevel(user)
+    
                 // If user gained points, display it
                 if (points !== 0) {
-                    setToast({
-                        title: "Welcome back!",
-                        message: `You earned ${points} coins for visiting today :)`
-                    })
+                    studentLevelChanged.then((value) => {
+                        if (value == true) {
+                            let userLevel = getStudentLevel(user)
+                            userLevel.then((newUserLevel) => {
+                                toastMessage += `\nYou've reached level ${newUserLevel}!`
+                                setToast({
+                                    title: "Welcome back!",
+                                    message: toastMessage
+                                });
+                            });
+                        } else {
+                            setToast({
+                                title: "Welcome back!",
+                                message: toastMessage
+                            });
+                        }
+                    });
                 }
 
             })

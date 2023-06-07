@@ -13,7 +13,8 @@ function CheckOutputComponent(props) {
     if (typeof output.at(-1) == 'string') {
         var userAns = output.at(-1).toLowerCase().replace(/(\r\n|\n|\r)/gm, "");
     }
-  
+    if (!userAns) 
+        return;        
     return(
         <div>
             {   
@@ -21,6 +22,8 @@ function CheckOutputComponent(props) {
             }
         </div>
     )
+
+    
 }
 
 export default CheckOutputComponent;

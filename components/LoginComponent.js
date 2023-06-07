@@ -16,6 +16,7 @@ import { v4 } from 'uuid'
  */
 function LoginComponent(props) {
     const [signUp, setSignUp] = useState(false)
+    const [signUpStep, setSignUpStep] = useState(0)
 
     const signUpNameRef = useRef(null)
     const signUpEmailRef = useRef(null)
@@ -24,6 +25,9 @@ function LoginComponent(props) {
 
     const signInEmailRef = useRef(null)
     const signInPasswordRef = useRef(null)
+
+    // const singUpStep = useRef(0)
+
 
     const { setUser } = useContext(Context)
 
@@ -171,7 +175,8 @@ function LoginComponent(props) {
                         expertise = 1
                     }
 
-                    const student = new Student(uuidv4(), name, email, expertise, null, false, [], 1, [], 0, [])
+                    // const student = new Student(uuidv4(), name, email, expertise, null, false, 0, 1, [], 0, [])
+                    const student = new Student(uuidv4(), name, email, expertise, null, false, 0, 1, 0, {}, {})
                     // console.log('here1')
                     // ToDo: if student already exists, do not create new student
                     createStudent(student).then((result) => {
@@ -314,16 +319,19 @@ function LoginComponent(props) {
                         <input type="password" id="inputPassword" className="form-control input-sm mb-2" placeholder="Password" required="True" ref={signUpPasswordRef} />
                         <input type="password" id="inputPasswordRepeated" className="form-control input-sm mb-2" placeholder="Repeat password" required="True" ref={signUpPasswordConfirmRef} />
                         <form className="level_switch">
-                            <span className="level_selection">Do you have experience in Programming?</span>
-                            <p className="level_switch_muted">
-                                If you choose "having experience", we will give some questions to check your expertise.
-                                <br></br>
-                                If you don't have, please feel free to choose "No".
-                            </p>
-                            <label className="switch">
-                                <input type="checkbox" />
-                                <span className="slider" onClick={question_shown}></span>
-                            </label>
+                            <div style={{ display: signUpStep === 0 ? 'block' : 'none' }}>
+
+                                <span className="level_selection">Do you have experience in Programming?</span>
+                                <p className="level_switch_muted">
+                                    If you choose "having experience", we will give some questions to check your expertise.
+                                    <br></br>
+                                    If you don't have, please feel free to choose "No".
+                                </p>
+                                <label className="switch">
+                                    <input type="checkbox" />
+                                    <span className="slider" onClick={question_shown}></span>
+                                </label>
+                            </div>
                             {/* <br></br> */}
                             {/* <span class = "level_selection">Do you have experience in Programming?</span> */}
                             {/* <button className="button_level" type="submit" onClick={handleSignUp}>Yes</button> */}
@@ -358,7 +366,7 @@ function LoginComponent(props) {
                                 <form className="white_box" id="demo"></form>
                                 <form className="title-question">
                                     <br></br>
-                                    <span className="title-question">Let's check your expertise level in python.</span>
+                                    <span className="title-question" style={{ display: signUpStep > 0 ? 'block' : 'none' }}>Let's check your expertise level in python.</span>
                                     {/* <br></br> */}
                                     {/* <div className="question" id = "question-1">
                     <div class ="question-content">
@@ -386,7 +394,7 @@ function LoginComponent(props) {
                     </div>
                     </div> */}
                                     <div className="question" id="question-2">
-                                        <div class="question-content">
+                                        <div class="question-content" style={{ display: signUpStep === 1 ? 'block' : 'none' }}>
                                             <p>
                                                 <span class="question_num">1. </span>
                                                 "What is the output of the following code?"
@@ -424,7 +432,7 @@ function LoginComponent(props) {
                                             <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer2} />
                                         </div>
                                     </div>
-                                    <div className="question" id="question-3">
+                                    <div className="question" id="question-3" style={{ display: signUpStep === 2 ? 'block' : 'none' }}>
                                         <div class="question-content">
                                             <p>
                                                 <span class="question_num">2. </span>
@@ -488,7 +496,7 @@ function LoginComponent(props) {
                                             <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer3} />
                                         </div>
                                     </div>
-                                    <div className="question" id="question-3">
+                                    <div className="question" id="question-3" style={{ display: signUpStep === 3 ? 'block' : 'none' }}>
                                         <div class="question-content">
                                             <p>
                                                 <span class="question_num">3. </span>
@@ -563,7 +571,10 @@ function LoginComponent(props) {
                                             <input type="answer1" id="inputAnswer1" className="answer-box" placeholder="Answer" required="True" ref={answer4} />
                                         </div>
                                     </div>
-                                    <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button>
+
+                                    {signUpStep >= 3 ? <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={handleSignUp}>Sign up</button> : null}
+                                    {signUpStep > 0 ? <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={() => setSignUpStep((v) => v - 1)}>Prev Question</button> : null}
+                                    {signUpStep < 3 ? <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={() => setSignUpStep((v) => v + 1)}>Next Question</button> : null}
                                 </form>
                             </form>
                         </div>

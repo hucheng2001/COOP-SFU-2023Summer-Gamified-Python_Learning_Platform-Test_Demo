@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from 'react'
 import Context from '../context/Context'
-import { giveStudentScore, getStudentScore, takeStudentScore } from '../data/Students'
+import { giveStudentScore, getStudentScore, takeStudentScore, getStudentLevel } from '../data/Students'
 import UserLinkComponent from './UserLinkComponent'
 import AchievementComponent from '../components/AchievementComponent'
 import achievementsJson from '../data/achievements.json'
 import { getFriends } from '../data/Students.js'
 import { Friendship } from '../context/Friendship.js'
+import levelsJson from '../data/levels.json'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 // import Box from '@mui/material/Box';
@@ -36,6 +37,7 @@ export default function ProfileComponent(props) {
     const [friends, setFriends] = useState(null)
 
     const currentScore = getStudentScore(user)
+
     const leftPoint = currentScore - leftPoint
 
     // const loadAchievements = () => {
@@ -80,8 +82,14 @@ export default function ProfileComponent(props) {
         backgroundColor: "#e0e0de",
         borderRadius: 50,
         margin: 50
+/* <<<<<<< components/ProfileComponent.js */
     }
-
+/*
+=======
+      }
+    
+>>>>>>> components/ProfileComponent.js
+*/
     const fillerStyles = {
         height: '100%',
         width: `67%`,
@@ -89,11 +97,23 @@ export default function ProfileComponent(props) {
         borderRadius: 'inherit',
         textAlign: 'right'
     }
+/* <<<<<<< components/ProfileComponent.js
 
+=======
+    
+>>>>>>> components/ProfileComponent.js */
     const labelStyles = {
         padding: 5,
         color: 'white',
         fontWeight: 'bold'
+    }
+
+    const progressContainerStyles = {
+        height: 50,
+        width: '50%',
+        textAlign: "center",
+        marginTop: 20,
+        marginBottom: 20
     }
 
     useEffect(() => {
@@ -101,9 +121,94 @@ export default function ProfileComponent(props) {
         getFriendsList()
     }, [])
 
+/* <<<<<<< components/ProfileComponent.js */
     function show_point() {
         currentScore.then((value) => {
             document.getElementById('p').innerHTML = 'Current point : ' + value + '</p>';
+        });
+    }
+/* =======
+>>>>>>> components/ProfileComponent.js */
+    function showProfileValues() {
+        currentScore.then((score) => {
+            // currentScore
+            document.getElementById('p').innerHTML = 'Current points : ' + score;
+
+            let currentLevelPromise = getStudentLevel(user)
+            currentLevelPromise.then((currentLevel) => {
+                let levelProgress = 0
+                // Level progress is not calculated when user is at max level
+                if (currentLevel < 5 && currentLevel >= 0) {
+                    // The points between the current level baseline and the next level
+                    let levelDistance = levelsJson[currentLevel + 1] - levelsJson[currentLevel]
+
+                    levelProgress = score - levelsJson[currentLevel]
+
+                    // Calculates the percentage the user is between current level and next level
+                    levelProgress = Math.floor((levelProgress / levelDistance) * 100)
+                }
+
+                // If the user is at max level show the bar at 100%
+                if (currentLevel >= 5) {
+/* <<<<<<< components/ProfileComponent.js */
+                    document.getElementById("level").innerHTML =
+/* =======
+                    document.getElementById("level").innerHTML = 
+>>>>>>> components/ProfileComponent.js */
+                        "<div style='display: grid; grid-template-columns: repeat(3, 1fr);'>" +
+                        "<div style='font-weight: bold;'>Level " + (currentLevel - 1) + "</div>" +
+                        "<div>" +
+                        "<div style=\"height: 70%; width: 100%; border-radius: 5px; background-color: #e0e0de;\">" +
+/* <<<<<<< components/ProfileComponent.js */
+                        "<div style=\"height: 100%; width: 100%;" +
+                        "background-color: green; border-radius: inherit; \">" +
+                        "</div>" +
+                        "</div>" +
+                        "<span style=\"padding: 5; font-weight: bold;\">" +
+                        score + " / " + score +
+/*=======
+                            "<div style=\"height: 100%; width: 100%;" +
+                                "background-color: green; border-radius: inherit; \">" +
+                            "</div>" +
+                        "</div>" +
+                        "<span style=\"padding: 5; font-weight: bold;\">" +
+                            score + " / " + score +
+>>>>>>> components/ProfileComponent.js */
+                        "</span>" +
+                        "</div>" +
+                        "<div style='font-weight: bold;'>Level " + currentLevel + "</div>" +
+                        "</div>"
+                } else {
+/* <<<<<<< components/ProfileComponent.js */
+                    document.getElementById("level").innerHTML =
+/* =======
+                    document.getElementById("level").innerHTML = 
+>>>>>>> components/ProfileComponent.js */
+                        "<div style='display: grid; grid-template-columns: repeat(3, 1fr);'>" +
+                        "<div style='font-weight: bold;'>Level " + currentLevel + "</div>" +
+                        "<div>" +
+                        "<div style=\"height: 70%; width: 100%; border-radius: 5px; background-color: #e0e0de;\">" +
+/* <<<<<<< components/ProfileComponent.js */
+                        "<div style=\"height: 100%; width:" + levelProgress + "%;" +
+                        "background-color: green; border-radius: inherit; \">" +
+                        "</div>" +
+                        "</div>" +
+                        "<span style=\"padding: 5; font-weight: bold;\">" +
+                        score + " / " + levelsJson[currentLevel + 1] +
+/* =======
+                            "<div style=\"height: 100%; width:" + levelProgress + "%;" +
+                                "background-color: green; border-radius: inherit; \">" +
+                            "</div>" +
+                        "</div>" +
+                        "<span style=\"padding: 5; font-weight: bold;\">" +
+                            score + " / " + levelsJson[currentLevel + 1] +
+>>>>>>> components/ProfileComponent.js */
+                        "</span>" +
+                        "</div>" +
+                        "<div style='font-weight: bold;'>Level " + (currentLevel + 1) + "</div>" +
+                        "</div>"
+                }
+            });
         });
     }
 
@@ -188,10 +293,7 @@ export default function ProfileComponent(props) {
                                 </div>
                             </div>
 
-
-
                         </div>
-
 
                         {/* <div className="row">
                   </div> */}
