@@ -25,5 +25,25 @@ The repository is not showing the complete project and restricted and proprietar
 The repository shows a portion of the project, mainly ideas and sections that I led the process on.
 
 ## Project Function Showcase
+### Gamified interface design
+<img width="1885" alt="image" src="https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/5c9e3cba-e68c-4071-bdc8-c053f893ff24">
+<img width="1885" alt="image" src="https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/2fab3b0c-09f2-4e96-bf0d-82a02fa1f03e">
+
+
 ### Work with Prairielearn
 ![2023-06-28_11 39 35](https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/c01d0539-aaab-480f-a9dd-76de4f6ee560)
+
+### AI-Copilot integration for real-time code feedback
+<img width="1162" alt="1" src="https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/0973da38-14a1-47e0-a55c-de33e1a97a44">
+
+### AI-generated Questions
+![2023-06-28_11 30 22](https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/d3f853c9-d225-4097-a9da-30492ae52067)
+
+### Compatibility with many different forms of AI systems, including code feedback integration
+<img width="853" alt="image" src="https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/ec36d3f3-4953-4f2f-8306-a6a00666ee7a">
+
+### Real-time discussions
+<img width="1775" alt="image" src="https://github.com/hucheng2001/COOP-SFU-2023Summer-Gamified-Python_Learning_Platform-Test_Demo/assets/55477525/00adf31a-f55c-473c-8f01-ae6d2c058df6">
+
+
+
