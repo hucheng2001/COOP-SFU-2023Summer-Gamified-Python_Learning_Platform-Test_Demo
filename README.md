@@ -14,7 +14,10 @@ The program mainly uses gamification to teach Python.
 
 ## Project Members
 Project Manager: Hazra Imran.
+
 Members: Cheng Hu, Megan Andrews, Trevor Bonas.
+
+I respectfully thank and acknowledge the contributions of all members to this project, thank you.
 
 ## Project Ownership
 The program is SFU IP and ownership of the complete program is owned by SFU.
@@ -22,7 +25,7 @@ For any concerns about privacy and ownership, please send me an email at privacy
 
 ## About this Repository
 The repository is not showing the complete project and restricted and proprietary content has been hidden. For a detailed display, please send me an email.
-The repository shows a portion of the project, mainly ideas and sections that I led the process on.
+
 
 ## Project Function Showcase
 ### Gamified interface design
